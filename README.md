@@ -6,7 +6,7 @@
 
 **Windows 10 / 11 · Intel / AMD x64**
 
-前往 [Releases](https://github.com/haidarkhanuk3344-collab/hualuobo/releases/tag/v0.6.1)，下载 `花萝卜-0.6.1-Windows-x64-Setup.exe`。安装后打开花萝卜，点击「放出花萝卜」。无需安装 Node.js，也无需下载源码。
+前往 [Releases](https://github.com/haidarkhanuk3344-collab/hualuobo/releases/tag/v0.6.1)，下载 `Hualuobo-0.6.1-Windows-x64-Setup.exe`。安装后打开花萝卜，点击「放出花萝卜」。无需安装 Node.js，也无需下载源码。
 
 0.6.0 用户可直接覆盖安装 0.6.1。此版本修复 Windows 提示「并行配置不正确」的启动配置损坏问题。
 
