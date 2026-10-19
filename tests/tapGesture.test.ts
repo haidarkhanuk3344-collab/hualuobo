@@ -1,0 +1,6 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {TapGesture} from '../src/core/tapGesture';
+test('two ordinary taps open once without any browser double-click event',()=>{const t=new TapGesture(),p={x:200,y:300};t.down(p);assert(!t.release(p,100,0));assert(t.pending);t.down(p);assert(t.release(p,460,0));assert(!t.pending);t.down(p);assert(!t.release(p,580,0));});
+test('slow independent taps do not open the menu',()=>{const t=new TapGesture(),p={x:200,y:300};t.release(p,100,0);t.expire(751);assert(!t.pending);t.down(p);assert(!t.release(p,800,0));});
+test('minor click position variation permits a second tap',()=>{const t=new TapGesture();t.release({x:200,y:300},100,0);t.down({x:212,y:309});assert(t.release({x:212,y:309},420,1));});
+test('a dragged second press clears the tap sequence',()=>{const t=new TapGesture(),p={x:200,y:300};t.release(p,100,0);t.down(p);assert(!t.release({x:224,y:300},420,24));assert(!t.pending);assert(!t.release(p,540,0));});
+test('moving away cancels the hold and a later click starts a new pair',()=>{const t=new TapGesture(),p={x:200,y:300};t.release(p,100,0);t.move({x:300,y:300});assert(!t.pending);assert.equal(t.holdUntil,0);t.down(p);assert(!t.release(p,450,0));});

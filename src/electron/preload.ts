@@ -1,0 +1,4 @@
+import {contextBridge,ipcRenderer} from 'electron';
+import type {DesktopAPI} from '../shared';
+const api:DesktopAPI={info:()=>ipcRenderer.invoke('info'),state:()=>ipcRenderer.invoke('state'),preferences:patch=>ipcRenderer.invoke('preferences',patch),onState:fn=>{const handler=(_:unknown,s:Parameters<typeof fn>[0])=>fn(s);ipcRenderer.on('state',handler);return()=>ipcRenderer.removeListener('state',handler);},objects:()=>ipcRenderer.invoke('objects'),onObjects:fn=>ipcRenderer.on('objects',(_,s)=>fn(s)),onCursor:fn=>ipcRenderer.on('cursor',(_,s)=>fn(s)),onCommand:fn=>ipcRenderer.on('command',(_,s)=>fn(s)),move:p=>ipcRenderer.send('move',p),hit:h=>ipcRenderer.send('hit',h),drag:on=>ipcRenderer.send('drag',on),menu:p=>ipcRenderer.send('menu',p),ready:()=>ipcRenderer.send('ready'),command:s=>ipcRenderer.send('command',s),report:d=>ipcRenderer.send('report',d)};
+contextBridge.exposeInMainWorld('desktop',api);

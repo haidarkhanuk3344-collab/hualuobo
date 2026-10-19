@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>花萝卜 · 控制面板</title>
+<link rel="icon" type="image/png" href="../assets/app/favicon.png">
+<style>
+:root{color-scheme:light;--ink:#2c332c;--muted:#697067;--line:#e9eae3;--accent:#435b46;--paper:#fdfdf9;--soft:#f2f3ec;--danger:#8d4c40}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}::selection{background:#dce5d6;color:var(--ink)}button,input{font:inherit}button{cursor:default}button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:4px}button:disabled,input:disabled{cursor:default}.window{width:100%;height:100vh;display:flex;flex-direction:column;overflow:hidden;background:var(--paper)}
+.titlebar{height:40px;flex:none;display:flex;align-items:center;padding-left:17px;border-bottom:1px solid var(--line);gap:9px;background:#fbfcf8;-webkit-app-region:drag;user-select:none}.appmark{width:19px;height:19px;overflow:hidden;position:relative;border-radius:5px;background:#eceee4;flex:none}.appmark img{position:absolute;width:45px;height:45px;left:-13px;top:-3px;max-width:none}.titlebar .title{font-size:12px;font-weight:500}.window-actions{margin-left:auto;display:flex;height:40px;-webkit-app-region:no-drag}.window-actions button{display:grid;place-items:center;width:43px;border:0;border-radius:0;background:transparent;color:#596055}.window-actions button:hover{background:#e9ece3}.window-actions .close:hover{background:#f3e5e1;color:var(--danger)}.window-actions button:focus-visible{outline-offset:-5px}.window-actions svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.1}
+.content{padding:29px 28px 24px;flex:1;min-height:0;display:flex;flex-direction:column}.hero{display:flex;flex:none;align-items:center;gap:19px}.portrait{position:relative;width:76px;height:76px;overflow:hidden;flex:none;background:#edece3;border-radius:17px}.portrait img{position:absolute;width:171px;height:171px;max-width:none;left:-48px;top:-9px}.hero h1{font-size:25px;line-height:1.35;font-weight:600;letter-spacing:.02em;margin:0 0 9px}.status{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;min-height:18px}.status-dot{width:6px;height:6px;border-radius:50%;background:#959c91;flex:none}.status[data-mode="active"] .status-dot{background:var(--accent)}
+.primary-actions{display:flex;flex:none;gap:10px;margin:24px 0 30px}.primary{height:45px;flex:1;border:0;border-radius:8px;background:var(--accent);color:#fff;font-weight:500;font-size:15px;letter-spacing:.02em}.primary:disabled{background:#687b66}.pause{width:87px;border:1px solid #e1e4da;background:#f7f8f2;color:var(--ink);border-radius:8px;flex:none}.pause:disabled{color:#979d91}.pause svg{width:12px;height:12px;fill:currentColor;vertical-align:-1px;margin-right:5px}.primary:not(:disabled):hover{background:#374e3b}.pause:not(:disabled):hover,.tray:hover{background:#ecefe5}.primary:not(:disabled):active,.pause:not(:disabled):active,.tray:active{filter:brightness(.94)}
+.section-title{flex:none;font-size:12px;font-weight:600;color:var(--muted);margin:0 0 5px}.settings{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#c4cbbd transparent}.setting{padding:18px 0;border-bottom:1px solid var(--line)}.setting:last-child{border-bottom:0}.size-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.size-row output{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}.range{display:block;width:100%;height:16px;margin:0;background:transparent;appearance:none;-webkit-appearance:none;accent-color:var(--accent);--fill:60%}.range::-webkit-slider-runnable-track{height:4px;margin:0 4px;border-radius:3px;background:linear-gradient(to right,#64785f 0 var(--fill),#e2e5da var(--fill) 100%)}.range::-webkit-slider-thumb{width:16px;height:16px;margin-top:-6px;border:2px solid #fff;border-radius:50%;background:#526c4e;box-shadow:0 1px 3px #24362232;appearance:none;-webkit-appearance:none}.range:disabled::-webkit-slider-thumb{background:#939b8e}
+.switch-row{display:flex;align-items:center;gap:16px;justify-content:space-between}.setting-label{font-size:14px;font-weight:500;line-height:1.5}.setting-description,.setting-status{font-size:11px;line-height:1.65;color:var(--muted);margin:5px 0 0}.switch{display:block;width:36px;height:21px;margin:0;border:0;border-radius:14px;background:#d9ddd3;appearance:none;-webkit-appearance:none;flex:none;position:relative}.switch:after{content:"";position:absolute;left:3px;top:3px;width:15px;height:15px;border-radius:50%;background:white;box-shadow:0 1px 2px #00000012;transition:transform 160ms ease-out}.initializing .switch:after{transition:none}.switch:checked{background:var(--accent)}.switch:checked:after{transform:translateX(15px)}.switch:disabled{opacity:.55}
+.bottom{margin-top:24px;flex:none}.hint{font-size:11px;line-height:1.7;color:var(--muted);margin:0 0 18px}.footer-actions{display:flex;align-items:center;justify-content:space-between}.tray{border:1px solid #dce0d5;border-radius:7px;background:transparent;color:#515b4c;height:34px;padding:0 13px;font-size:12px}.exit{border:0;background:transparent;color:var(--danger);font-size:12px;padding:8px 0 8px 12px}.exit:hover{color:#72382e;text-decoration:underline;text-underline-offset:3px}.error{font-size:12px;line-height:1.6;color:var(--danger);margin:0 0 14px;overflow-wrap:anywhere}[hidden]{display:none!important}@media(max-width:389px){.content{padding-right:22px;padding-left:22px}.hero{gap:16px}.hint{max-width:30em}}@media(prefers-reduced-motion:reduce){.switch:after{transition:none}}
+</style>
+</head>
+<body class="initializing">
+<main class="window" aria-label="花萝卜控制面板">
+<header class="titlebar"><span class="appmark"><img src="../assets/living/settle-00.png" alt="" draggable="false"></span><span class="title">花萝卜</span><div class="window-actions"><button type="button" data-command="hide-panel" aria-label="收到托盘" title="收到托盘"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1 6h10"/></svg></button><button type="button" class="close" data-command="hide-panel" aria-label="关闭控制面板" title="关闭控制面板，花萝卜继续运行"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8"/></svg></button></div></header>
+<div class="content">
+<div class="hero"><div class="portrait"><img src="../assets/living/settle-00.png" alt="花萝卜正脸" draggable="false"></div><div><h1>花萝卜</h1><div class="status" id="status" role="status" aria-live="polite"><span class="status-dot" aria-hidden="true"></span><span id="status-text">正在连接…</span></div></div></div>
+<div class="primary-actions"><button type="button" class="primary" id="visibility" disabled>放出花萝卜</button><button type="button" class="pause" id="pause" disabled><svg viewBox="0 0 12 12" aria-hidden="true"><path id="pause-symbol" d="M2 1h3v10H2zM7 1h3v10H7z"/></svg><span id="pause-text">暂停</span></button></div>
+<h2 class="section-title">偏好设置</h2>
+<div class="settings">
+<div class="setting"><div class="size-row"><label class="setting-label" for="size">猫咪大小</label><output id="size-value" for="size">100%</output></div><input class="range" id="size" type="range" min="70" max="120" step="5" value="100" aria-valuetext="100%" disabled></div>
+<div class="setting switch-row"><div><label class="setting-label" for="icons">桌面图标互动</label><p class="setting-description" id="icons-description">在文件、文件夹和快捷方式上休息</p><p class="setting-status" id="icons-status" role="status" aria-live="polite" hidden></p></div><input class="switch" id="icons" type="checkbox" role="switch" aria-describedby="icons-description icons-status" disabled></div>
+<div class="setting switch-row"><div><label class="setting-label" for="login">开机启动</label><p class="setting-description" id="login-description">登录 Windows 后自动启动</p></div><input class="switch" id="login" type="checkbox" role="switch" aria-describedby="login-description" disabled></div>
+</div>
+<footer class="bottom"><p class="error" id="error" role="alert" hidden></p><p class="hint">关闭面板后，已放出的花萝卜会继续留在桌面。</p><div class="footer-actions"><button type="button" class="tray" data-command="hide-panel">收到托盘</button><button type="button" class="exit" data-command="quit">退出花萝卜</button></div></footer>
+</div>
+</main>
+<script>
+(() => {
+  const api = window.desktop;
+  const byId = id => document.getElementById(id);
+  const elements = {
+    visibility:byId('visibility'), pause:byId('pause'), pauseText:byId('pause-text'), pauseSymbol:byId('pause-symbol'),
+    status:byId('status'), statusText:byId('status-text'), size:byId('size'), sizeValue:byId('size-value'),
+    icons:byId('icons'), iconDescription:byId('icons-description'), iconStatus:byId('icons-status'),
+    login:byId('login'), loginDescription:byId('login-description'), error:byId('error')
+  };
+  let state = null;
+  let busy = false;
+  let adjustingSize = false;
+  let unsubscribe;
+
+  function showSize(value) {
+    const size = Math.max(70, Math.min(120, Number(value)));
+    elements.size.value = String(size);
+    elements.sizeValue.value = `${size}%`;
+    elements.size.setAttribute('aria-valuetext', `${size}%`);
+    elements.size.style.setProperty('--fill', `${(size - 70) * 2}%`);
+  }
+
+  function render() {
+    const connected = !!state;
+    elements.visibility.disabled = !connected || busy;
+    elements.pause.disabled = !connected || !state.visible || busy;
+    elements.size.disabled = !connected || busy;
+    elements.icons.disabled = !connected || busy || state.iconStatus === 'unsupported';
+    elements.login.disabled = !connected || busy || !['win32','darwin'].includes(state.platform);
+    if (!connected) return;
+    elements.visibility.textContent = state.visible ? '收起花萝卜' : '放出花萝卜';
+    elements.pauseText.textContent = state.paused ? '继续' : '暂停';
+    elements.pauseSymbol.setAttribute('d', state.paused ? 'M3 1l8 5-8 5z' : 'M2 1h3v10H2zM7 1h3v10H7z');
+    elements.pause.setAttribute('aria-label', state.paused ? '继续活动' : '暂停活动');
+    elements.statusText.textContent = !state.visible ? '已收起' : state.paused ? '已暂停' : '在桌面活动';
+    elements.status.dataset.mode = state.visible && !state.paused ? 'active' : 'idle';
+    elements.icons.checked = state.iconsEnabled;
+    elements.login.checked = state.launchAtLogin;
+    if (!adjustingSize) showSize(state.size);
+    elements.iconDescription.textContent = state.platform === 'darwin' ? '在可见图标或 Dock 上休息' : '在文件、文件夹和快捷方式上休息';
+    elements.loginDescription.textContent = state.platform === 'darwin' ? '登录 Mac 后自动启动' : state.platform === 'win32' ? '登录 Windows 后自动启动' : '当前系统暂不支持开机启动';
+    let iconMessage = '';
+    if (state.iconsEnabled) {
+      if (state.iconStatus === 'permission-required') iconMessage = '请先在系统设置中允许读取图标位置。';
+      else if (state.iconStatus === 'unsupported') iconMessage = '当前系统暂不支持图标互动。';
+      else if (state.iconStatus === 'ready' && state.iconCount === 0) iconMessage = '当前没有可见图标，显示桌面后再试。';
+      else if (!['ready','disabled'].includes(state.iconStatus)) iconMessage = '暂时读不到图标，稍后会自动重试。';
+      if (state.iconMessage) iconMessage = state.iconMessage;
+    }
+    elements.iconStatus.textContent = iconMessage;
+    elements.iconStatus.hidden = !iconMessage;
+    elements.icons.title = state.iconStatus === 'ready' ? `当前可感知 ${state.iconCount} 个图标` : '';
+    document.title = '花萝卜 · 控制面板';
+  }
+
+  function applyState(next) {
+    if (!next || typeof next.visible !== 'boolean' || !Number.isFinite(next.size)) return;
+    const initial = !state;
+    state = next;
+    showError(next.errorMessage || '');
+    render();
+    if (initial) {
+      void elements.icons.offsetWidth;
+      requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.remove('initializing')));
+    }
+  }
+
+  function showError(message) {
+    elements.error.textContent = message;
+    elements.error.hidden = !message;
+  }
+
+  async function perform(task, message, refresh = true) {
+    if (busy || !api) return;
+    busy = true;
+    showError('');
+    render();
+    try {
+      const result = await task();
+      if (refresh) applyState(result && typeof result.visible === 'boolean' ? result : await api.state());
+    } catch {
+      showError(message);
+    } finally {
+      busy = false;
+      render();
+    }
+  }
+
+  elements.visibility.addEventListener('click', () => state && perform(() => api.command(state.visible ? 'hide-pet' : 'show-pet'), '暂时无法放出或收起花萝卜，请再试一次。'));
+  elements.pause.addEventListener('click', () => state && perform(() => api.command('pause'), '暂时无法切换活动状态，请再试一次。'));
+  elements.size.addEventListener('input', () => { adjustingSize = true; showSize(elements.size.value); });
+  elements.size.addEventListener('change', () => {
+    const size = Number(elements.size.value);
+    adjustingSize = true;
+    perform(() => api.preferences({size}), '大小没有保存，请重新调整。').finally(() => { adjustingSize = false; render(); });
+  });
+  elements.icons.addEventListener('change', () => {
+    const iconsEnabled = elements.icons.checked;
+    perform(() => api.preferences({iconsEnabled}), '图标互动设置没有保存，请再试一次。');
+  });
+  elements.login.addEventListener('change', () => {
+    const launchAtLogin = elements.login.checked;
+    perform(() => api.preferences({launchAtLogin}), '开机启动设置没有保存，请再试一次。');
+  });
+  document.querySelectorAll('[data-command]').forEach(button => {
+    button.addEventListener('click', () => {
+      if (!api) return;
+      Promise.resolve(api.command(button.dataset.command)).catch(() => showError(button.dataset.command === 'quit' ? '暂时无法退出，请通过托盘菜单退出。' : '暂时无法收起面板，请再试一次。'));
+    });
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && api) Promise.resolve(api.command('hide-panel')).catch(() => showError('暂时无法收起面板，请再试一次。'));
+  });
+  window.addEventListener('beforeunload', () => { if (typeof unsubscribe === 'function') unsubscribe(); });
+  if (!api || typeof api.state !== 'function' || typeof api.preferences !== 'function') {
+    elements.statusText.textContent = '连接失败';
+    showError('控制面板暂时未连接，请重新启动花萝卜。');
+    render();
+    return;
+  }
+  if (typeof api.onState === 'function') unsubscribe = api.onState(applyState);
+  api.state().then(applyState).catch(() => {
+    elements.statusText.textContent = '连接失败';
+    showError('暂时无法读取花萝卜的状态，请重新打开面板。');
+  });
+})();
+</script>
+</body>
+</html>

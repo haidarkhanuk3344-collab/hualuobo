@@ -1,0 +1,11 @@
+node_modules/
+dist/
+dist-electron/
+release/
+artifacts/
+native/bin/
+.DS_Store
+.env
+.env.*
+*.log
+__pycache__/

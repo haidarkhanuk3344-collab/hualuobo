@@ -1,0 +1,28 @@
+{
+  "name": "hualuobo-multiview-sprite",
+  "version": "0.6.1",
+  "private": true,
+  "main": "dist-electron/main.cjs",
+  "description": "Complete full-body 2D cat frames, distance-driven playback and desktop interaction without limb cutouts or pose blending",
+  "license": "UNLICENSED",
+  "author": "Hualuobo workspace",
+  "scripts": {
+    "build": "node scripts/build_native.mjs && tsc --noEmit && node scripts/build.mjs",
+    "start": "npm run build && electron .",
+    "test": "tsx --test tests/*.test.ts",
+    "package:mac": "node scripts/package.mjs darwin arm64",
+    "package:windows": "node scripts/package.mjs win32 x64",
+    "package:windows:installer": "node scripts/package_windows_installer.mjs",
+    "build:windows-native": "node scripts/build_windows_native.mjs"
+  },
+  "devDependencies": {
+    "@electron/packager": "19.1.1",
+    "@types/node": "24.19.1",
+    "@xmldom/xmldom": "0.9.12",
+    "electron": "38.8.6",
+    "esbuild": "0.25.12",
+    "resedit": "2.0.3",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  }
+}

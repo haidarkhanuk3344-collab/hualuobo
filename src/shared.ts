@@ -1,0 +1,10 @@
+export type Point={x:number,y:number};
+export type Area=Point&{width:number,height:number};
+export type Sample=Point&{at:number,received?:number,bounds:Area};
+export type DesktopObject={id:string,kind:'dock'|'desktop',name:string,bounds:Area};
+export type ObjectState={status:'ready'|'permission-required'|'unsupported'|'unavailable',targets:DesktopObject[],enabled:boolean};
+export type DesktopInfo={area:Area,screenArea:Area,dpr:number,width:number,height:number,verify:boolean,probe:boolean,platform:string};
+export type Preferences={size:number,iconsEnabled:boolean,launchAtLogin:boolean};
+export type AppState=Preferences&{visible:boolean,paused:boolean,platform:string,version:string,iconStatus:ObjectState['status'],iconCount:number,iconMessage?:string,errorMessage?:string};
+export type DesktopAPI={info:()=>Promise<DesktopInfo>,state:()=>Promise<AppState>,preferences:(patch:Partial<Preferences>)=>Promise<AppState>,onState:(fn:(s:AppState)=>void)=>(()=>void),objects:()=>Promise<ObjectState>,onObjects:(fn:(s:ObjectState)=>void)=>void,onCursor:(fn:(s:Sample)=>void)=>void,onCommand:(fn:(s:string)=>void)=>void,move:(p:Point)=>void,hit:(hit:boolean)=>void,drag:(on:boolean)=>void,menu:(p?:Point)=>void,ready:()=>void,command:(s:string)=>void,report:(data:unknown)=>void};
+declare global{interface Window{desktop:DesktopAPI;__catSprite:any;}}

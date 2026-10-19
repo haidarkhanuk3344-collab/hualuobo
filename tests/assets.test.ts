@@ -1,0 +1,9 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
+test('runtime uses supplied poses, independent walks and connected whole-body paw frames without model files',()=>{const m=JSON.parse(fs.readFileSync('assets/manifest.json','utf8'));assert.equal(Object.keys(m.assets).length,48);for(const d of ['left','right']){assert.equal(m.walk[d].frames.length,8);assert.equal(m.paw[d].frames.length,6);assert(m.paw[d].wholeBody);assert.equal(m.paw[d].mirrored,false);for(const f of [...m.walk[d].frames,...m.paw[d].frames]){const b=fs.readFileSync('assets/'+f);assert.equal(b.subarray(1,4).toString(),'PNG');}}assert.equal(m.livingExtraction.length,46);assert(m.livingExtraction.every((r:any)=>r.components===1));for(const clip of Object.values(m.actions) as any[]){assert.equal(clip.frames.length,6);assert.equal(clip.flow.length,5);for(const flow of clip.flow){assert.equal(flow.forward.length,32*32*4);assert.equal(flow.backward.length,32*32*4);}}assert.deepEqual(fs.readFileSync('assets/'+m.actions.settle.frames[0]),fs.readFileSync('assets/'+m.paw.left.frames[0]));assert.deepEqual(fs.readFileSync('assets/'+m.actions.settle.frames[5]),fs.readFileSync('assets/'+m.actions.curl.frames[0]));assert.notDeepEqual(m.walk.left.frames,m.walk.right.frames);assert(!fs.existsSync('assets/model'));});
+
+test('neutral bridge endpoints reuse identical complete images',()=>{
+ const m=JSON.parse(fs.readFileSync('assets/manifest.json','utf8'));
+ for(const d of ['left','right'])assert.deepEqual(fs.readFileSync('assets/'+m.starts[d].frames[0]),fs.readFileSync('assets/'+m.starts.left.frames[0]));
+ assert.deepEqual(fs.readFileSync('assets/'+m.actions.settle.frames[0]),fs.readFileSync('assets/'+m.paw.left.frames[0]));
+ assert.deepEqual(fs.readFileSync('assets/'+m.actions.settle.frames.at(-1)),fs.readFileSync('assets/'+m.actions.curl.frames[0]));
+});
